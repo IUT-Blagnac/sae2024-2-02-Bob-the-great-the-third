@@ -45,11 +45,11 @@ endif::[]
 
 === De la solution...
 
-* LAST NAME : DOE
-* First name : John
+* LAST NAME : Delaplagne
+* First name : Titouan
 * TD group : 
-- [ ] 1
-- [x] 2
+- [x] 1
+- [ ] 2
 - [ ] 3
 - [ ] 4
 
@@ -159,14 +159,14 @@ Vous utiliserez le dépôt initial qui vous aura été attribué via classroom p
 
 === Phase 1 (deadline : **vendredi 14 juin 2024** à minuit)
 
-* [ ] Votre ou vos algorithmes en précisant les éléments du tableau ci-dessous :
+* [x] Votre ou vos algorithmes en précisant les éléments du tableau ci-dessous :
 
 [options="header"]
 |==========================================================================
 | #    | lien                                                     | langage  | catégorie 
-| 1    | link:src/main/java/exercice/Exercice1.java[meilleur java]| Java     | Simplicité
-| 2    | link:src/main/java/exercice/Exercice2.java[meilleur C]    | C     | Efficacité
-| ...  | ...                                                      | ...      | ...      
+| 1    | link:src\main\java\iut\sae\algo\Efficacite.java[Efficace java]| Java     | Efficacité
+| 2    | link:src\main\java\iut\sae\algo\Simplicite.java[Simple java]    | Java     | Simplicité
+| 3  | link:src\main\java\iut\sae\algo\Sobriete.java[Sobriété java]                                                   | Java      | Sobriété      
 |==========================================================================
 
 === Phase 2 (deadline : **vendredi 21 juin 2024** à minuit)
