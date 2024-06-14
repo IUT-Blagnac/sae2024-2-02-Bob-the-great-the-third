@@ -21,7 +21,7 @@ public class Sobriete{
     }
 
     public static String RLE(String in, int iteration) throws AlgoException{
-        String str = Algo.RLE(in);
+        String str = Efficacite.RLE(in);
         if(iteration==1){
             return str;
         }
