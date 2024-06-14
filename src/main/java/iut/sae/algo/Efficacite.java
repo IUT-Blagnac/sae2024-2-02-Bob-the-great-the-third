@@ -4,8 +4,11 @@ package iut.sae.algo;
 public class Efficacite{
 
     public static String RLE(String in){
-        int nbCharInARow;
-        int len=in.length(), firstOfAkind=0;
+        int len=in.length(), cpt=0;
+        if(len==0){
+            return "";
+        }
+
         StringBuilder str=new StringBuilder(len);
 		char lastChar=in.charAt(0),charAt;
 
@@ -13,46 +16,41 @@ public class Efficacite{
 
 			charAt=in.charAt(i);
 
-			if(lastChar!=charAt) {
-                
-                nbCharInARow=i-firstOfAkind;
+			if(lastChar!=charAt || cpt>=9) {
 
-                while(nbCharInARow>9){
-                    
-                    str.append(9);
-                    str.append(charAt);
+                str.append(cpt);
+                str.append(lastChar);
 
-                    nbCharInARow-=9;
-                }
-				
-                str.append(nbCharInARow);
-                str.append(charAt);
-
-				lastChar=charAt;
-                firstOfAkind=i;
-
+                lastChar=charAt;
+                cpt=0;
             }
+
+            cpt++;
 		}
+
+        str.append(cpt);
+        str.append(lastChar);
         
 		return new String(str);
     }
+
 
     public static String RLE(String in, int iteration) throws AlgoException{
+        if(in.isEmpty())
+            return "";
+
         StringBuilder sb=new StringBuilder(in);
-        return new String(Efficacite.RLE(sb,iteration,null));
-    }
 
-    private static StringBuilder RLE(StringBuilder in, int iteration, Void sig) throws AlgoException{
-        StringBuilder str = Efficacite.RLE(in,null);
-        if(iteration==1){
-            return str;
+        for(int i=0;i<iteration;i++){
+            sb=RLE(sb);
         }
-        return RLE(str, iteration-1,null);
+
+        return new String(sb);
     }
 
-    private static StringBuilder RLE(StringBuilder in, Void diff){
-        int nbCharInARow;
-        int len=in.length(), firstOfAkind=0;
+    private static StringBuilder RLE(StringBuilder in) {
+        int len=in.length(), cpt=0;
+
         StringBuilder str=new StringBuilder(len);
 		char lastChar=in.charAt(0),charAt;
 
@@ -60,50 +58,65 @@ public class Efficacite{
 
 			charAt=in.charAt(i);
 
-			if(lastChar!=charAt) {
-                
-                nbCharInARow=i-firstOfAkind;
+			if(lastChar!=charAt || cpt>=9) {
 
-                while(nbCharInARow>9){
-                    
-                    str.append(9);
-                    str.append(charAt);
+                str.append(cpt);
+                str.append(lastChar);
 
-                    nbCharInARow-=9;
-                }
-				
-                str.append(nbCharInARow);
-                str.append(charAt);
-
-				lastChar=charAt;
-                firstOfAkind=i;
-
+                lastChar=charAt;
+                cpt=0;
             }
+
+            cpt++;
 		}
+
+        str.append(cpt);
+        str.append(lastChar);
         
-		return new String(str);
+		return str;
     }
 
     public static String unRLE(String in) {
-        String str="";
-        int len=in.length(), times;
+        int len=in.length(),times;
+        StringBuilder str=new StringBuilder(len);
         char toAdd;
 
         for(int i=0;i<len;i+=2){
             times=in.charAt(i)-'0';
             toAdd=in.charAt(i+1);
             for(int j=0;j<times;j++)
-                str+=toAdd;
+                str.append(toAdd);
         }
-        System.out.println(str);
-        return str;
+        return new String(str);
     }
 
     public static String unRLE(String in, int iteration) throws AlgoException{
-        if(iteration==0)
-            return in;
+        if(in.isEmpty())
+            return "";
 
-        return unRLE(unRLE(in),iteration-1);
+        StringBuilder sb=new StringBuilder(in);
+        
+        for(int i=0;i<iteration;i++){
+            sb=unRLE(sb);
+        }
+        
+        return new String(sb);
+    }
+
+    private static StringBuilder unRLE(StringBuilder str){
+
+        int len=str.length(),times;
+        StringBuilder sb=new StringBuilder(len);
+        char toAdd;
+
+        for(int i=0;i<len;i+=2){
+            times=str.charAt(i)-'0';
+            toAdd=str.charAt(i+1);
+            for(int j=0;j<times;j++)
+                sb.append(toAdd);
+        }
+
+        return sb;
     }
 }
 
