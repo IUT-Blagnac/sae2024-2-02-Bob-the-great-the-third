@@ -6,10 +6,10 @@ public class Algo{
         String str="";
 		char lastChar=in.charAt(0),charAt;
 		int len=in.length(), cpt=0;
-		
+		 
 		for(int i=0;i<len;i++) {
 			charAt=in.charAt(i);
-			if(lastChar!=charAt) {
+			if(lastChar!=charAt || cpt>=9) {
 				str+=cpt+"" +lastChar;
 				lastChar=charAt;
 				cpt=0;
@@ -17,25 +17,11 @@ public class Algo{
 			cpt++;
 		}
 		str+=cpt+"" +lastChar;
-		
 		return str;
     }
 
     public static String RLE(String in, int iteration) throws AlgoException{
-        String str="";
-		char lastChar=in.charAt(0),charAt;
-		int len=in.length(), cpt=0;
-		
-		for(int i=0;i<len;i++) {
-			charAt=in.charAt(i);
-			if(lastChar!=charAt) {
-				str+=cpt+"" +lastChar;
-				lastChar=charAt;
-				cpt=0;
-			}
-			cpt++;
-		}
-		str+=cpt+"" +lastChar;
+        String str = Algo.RLE(in);
         if(iteration==1){
             return str;
         }
@@ -53,13 +39,15 @@ public class Algo{
             for(int j=0;j<times;j++)
                 str+=toAdd;
         }
+        System.out.println(str);
         return str;
     }
 
     public static String unRLE(String in, int iteration) throws AlgoException{
-        // Provide your algo here
-        return "NotYetImplemented";
+        if(iteration==0)
+            return in;
 
+        return unRLE(unRLE(in),iteration-1);
     }
 }
 
