@@ -1,148 +1,192 @@
 package iut.sae.algo;
 
-public class Algo {
 
-    /** Permet de compresser une chaîne de caractères
-     *  pour passer d'une suite de caractères à une suite de paires de valeur composée de : nombre de répétitions, valeur répétée
-     * @param in la chaîne de caractères à compresser
-     * @return la chaine de caractères compressée
-     */
-    public static String RLE(String in) {
-        long debut = System.nanoTime(); // Chronomètre qui va récupérer la durée avant la fin du programme
-        
-        // Condition qui vérifie que la chaine n'est pas vide
-        if (in.isEmpty()) { 
-            return "";
-        }
-    
-        StringBuilder resultat = new StringBuilder();
-        int length = in.length(); // Calculer la longueur de la chaîne une fois
-        int i = 0; // Index de parcours
-        
-        // Boucle qui parcourt tout les caractères de la chaîne
-        while (i < length) { 
-            char caractere_temp = in.charAt(i); // On récupère le premier caractère
-            int nbOccurences = 1;
-            
-            // Boucle qui compte le nombre de fois que le caractère apparaît dans la chaîne
-            while (i + 1 < length && in.charAt(i + 1) == caractere_temp) {
-                nbOccurences++;
-                i++;
-            }
-            
-            // Ajout des caractères et de leur nombre d'occurrences
-            while (nbOccurences > 9) {
-                resultat.append(9).append(caractere_temp); // Ajoute notre caractère et son nombre de répétition dans la chaîne
-                nbOccurences -= 9;
-            }
-            resultat.append(nbOccurences).append(caractere_temp); // Ajoute notre caractère et son nombre de répétition dans la chaîne
-            i++; // On passe au prochain caractère de la chaîne
-        }
-        
-        long fin = System.nanoTime(); // Chronomètre qui va récupérer la durée vers la fin du programme
-    
-        // Calcul de la latence
-        long latence = fin - debut; // Calcul de la latence en nanosecondes
-        double latence_ms = (double) latence / 1000000.0; // Conversion en millisecondes
-        
-        // Affichage du temps de réponse
-        System.out.println("RESULTATS DE LA COMPRESSION");
-        System.out.println("Temps de réponse : " + latence + " ns"); // En nanoseconde
-        System.out.println("Temps de réponse : " + String.format("%.3f", latence_ms) + " ms\n"); // En milliseconde
-        
-        return resultat.toString();
-    }
-    
-    
+public class Efficacite{
 
-    /** Permet de lancer un nombre de fois notre fonction de compressage
-     * @param in la chaîne de caractères à compresser
-     * @param iteration le nombre de fois la fonction RLE que va être appeler
-     * @return la dernière chaine de caractères compressée
-     */
-    public static String RLE(String in, int iteration) throws AlgoException {
-        String resultat = in;
 
-        for (int i = 0; i < iteration; i++) {
-            resultat = RLE(resultat);
-            if (resultat == null) {
-                System.out.println("Le paramètre est vide !");
-                break;
-            }
-        }
+    public static String RLE(String in){
+        // Initialisation de la variable de longueur et de compteur des charactères
+        int len=in.length(), cpt=0;
 
-        return resultat;
-    }
-
-    /** Permet de décoder notre chaîne  
-     *  pour passer d'une suite de paires de valeur à sa chaîne d'origine
-     * @param in la chaîne de caractères à décompresser
-     * @return la chaîne de caractères décompressée
-     */
-    public static String unRLE(String in) throws AlgoException {
-        long debut = System.nanoTime(); // Début du chrono
-        
-        // Condition qui vérifie que la chaîne n'est pas vide
-        if (in.isEmpty()) {
+        // Si le String passé en paramêtre est vide
+        if(len==0){
+            // On retourne un String vide
             return "";
         }
 
-        // Condition qui vérifie que la taille de la chaîne est paire
-        if (in.length() % 2 != 0) {
-            throw new AlgoException("ERREUR: La longueur de la chaîne est impaire !");
-        }
+        // On itialise un Objet StringBuilder classe optimisée semblable à String
+        // On initialise sa longueur à la longueur du String plutôt que la longueur par défault(16) pour éviter une perte de 
+        // temps lors de l'ajout de charactères 
+        StringBuilder str=new StringBuilder(len);
+        // On initialise la variable du charactère que l'on compte actuellement
+		char lastChar=in.charAt(0);
+        // Puis une variable pour le charactère actuel lorsque l'on parcours le String
+        char charAt;
 
-        StringBuilder resultat = new StringBuilder();
-        int length = in.length(); // Calculer la longueur de la chaîne une seule fois
-        
-        // Boucle qui parcourt tous les caractères de la chaîne
-        for (int i = 0; i < length; i += 2) {
-            char cpt_temp = in.charAt(i); // On récupère le nombre de répétition
-            char caractere_temp = in.charAt(i + 1); // On récupère le caractère
-            
-            // Condition pour récupérer le nombre de répétition
-            if (Character.isDigit(cpt_temp)) {
-                int nbFois = Character.getNumericValue(cpt_temp);
-                
-                // Ajout du caractère nbFois dans le résultat
-                for (int j = 0; j < nbFois; j++) {
-                    resultat.append(caractere_temp);
-                }
-            } else {
-                throw new AlgoException("ERREUR: Caractère de comptage invalide !");
+        // On parcours le String
+		for(int i=0;i<len;i++) {
+
+            // On sauvegarde le charactère actuel
+			charAt=in.charAt(i);
+
+            // Si ce dernier est différent du précédent ou si le compteur atteint 9 
+			if(lastChar!=charAt || cpt>=9) {
+
+                // On ajoute le charactère précédé par son nombre d'apparition
+                str.append(cpt);
+                str.append(lastChar);
+
+                // On mémorise le nouveau charactère
+                lastChar=charAt;
+                // Et l'on réinitialise le compteur
+                cpt=0;
             }
-        }
 
-        long fin = System.nanoTime(); // Fin du chrono
-        long latence = fin - debut; // Calcul de la latence en nanosecondes
-        double latence_ms = (double) latence / 1000000.0; // Conversion en millisecondes
+            // Dans tous les cas l'on incrémente le compteur
+            cpt++;
+		}
 
-        // Affichage du temps de réponse
-        System.out.println("RESULTATS DE LA DECOMPRESSION");
-        System.out.println("Temps de réponse : " + latence + " ns"); // En nanosecondes
-        System.out.println("Temps de réponse : " + String.format("%.3f", latence_ms) + " ms\n"); // En millisecondes
-
-        return resultat.toString();
+        // On sauvegarde le dernier charactère et son nombre d'apparition qui n'est pas traité par le code précédent
+        str.append(cpt);
+        str.append(lastChar);
+        
+        // Enfin l'on convertit le StringBuilder en String
+		return new String(str);
     }
 
-    
 
-    /** Permet de lancer un nombre de fois notre fonction de décompressage
-     * @param in la chaîne de caractères à décompresser
-     * @param iteration le nombre de fois la fonction unRLE que va être appeler
-     * @return la dernière chaine de caractères décompressée
-     */
-    public static String unRLE(String in, int iteration) throws AlgoException {
-        String resultat = in;
+    public static String RLE(String in, int iteration) throws AlgoException{
+        // Si la chaine est vide on retourne un String vide
+        if(in.isEmpty())
+            return "";
 
-        for (int i = 0; i < iteration; i++) {
-            resultat = unRLE(in);
-            if (resultat == null) {
-                System.out.println("Le paramètre est vide !");
-                break;
-            }
+        // Sinon l'on crée un nouveau StringBuilder 
+        StringBuilder sb=new StringBuilder(in);
+
+        for(int i=0;i<iteration;i++){
+            // On appelle une fonction semblable à celle au dessus mais qui traite uniquement des StringBuilder pour éviter
+            //  la perte de temps de la conversion en String
+            sb=RLE(sb);
         }
 
-        return resultat;
+        // Enfin on convertit notre chaine en String
+        return new String(sb);
+    }
+
+    /** Fonction appliquant l'algorithme de compression RLE.
+     * 
+     * Fonction appliquant l'algorithme de compression RLE avec des StringBuilder.
+     * 
+     * @param in IN: StringBuilder de la chaine de charactères à compresser 
+     * @return un StringBuilder de la chaine compressée
+     */
+    private static StringBuilder RLE(StringBuilder in) {
+
+        // La fonction est identique à celle publique simplement sans conversion en String 
+        // Elle évite la perte de temps de la conversion StringBuilder -> String.
+
+        int len=in.length(), cpt=0;
+
+        StringBuilder str=new StringBuilder(len);
+		char lastChar=in.charAt(0),charAt;
+
+		for(int i=0;i<len;i++) {
+
+			charAt=in.charAt(i);
+
+			if(lastChar!=charAt || cpt>=9) {
+
+                str.append(cpt);
+                str.append(lastChar);
+
+                lastChar=charAt;
+                cpt=0;
+            }
+
+            cpt++;
+		}
+
+        str.append(cpt);
+        str.append(lastChar);
+        
+		return str;
+    }
+
+    public static String unRLE(String in) {
+        // Initialisation de la longueur de la chaîne à décompresser
+        int len=in.length();
+        // Déclaration d'une variable stockant le nombre de fois dont on doit ajouter le charactère
+        int times;
+
+        // Initialisation d'un StringBuilder avec une taille de len. Pour accélerer les appels de la méthode append
+        StringBuilder str=new StringBuilder(len);
+
+        char toAdd; // Charactère à ajouter
+
+        // On parcours la chaine à décompresser
+        for(int i=0;i<len;i+=2){
+
+            // On récupère le nombre devant le charactère
+            times=in.charAt(i)-'0';
+
+            // On récupère le charactère à ajouter
+            toAdd=in.charAt(i+1);
+
+            // On ajoute times fois le charactère 
+            for(int j=0;j<times;j++)
+                str.append(toAdd);
+        }
+
+        // Enfin on retourne le StringBuilder converti en String
+        return new String(str);
+    }
+
+
+    public static String unRLE(String in, int iteration) throws AlgoException{
+        // Si la chaîne de charactère est vide on retourne la chaîne
+        // Si la chaîne ne doit pas être convertie cette condition permet d'éviter le temps de conversion
+        //  de String -> StringBuilder et StringBuilder -> String.
+        if(in.isEmpty() || iteration<=0)
+            return in;
+
+        
+        // On initialise un StringBuilder correspondant au String in
+        StringBuilder sb=new StringBuilder(in);
+        
+        for(int i=0;i<iteration;i++){
+            // On appelle une méthode similaire a unRLE mais utilisant et retournant des StringBuilder
+            sb=unRLE(sb);
+        }
+        
+        // Retourne le String correspondant au StringBuilder 
+        return new String(sb);
+    }
+
+
+    /**  Fonction appliquant l'algorithme de cécompression RLE.
+     * 
+     * Fonction appliquant l'algorithme de décompression RLE avec des StringBuilder.
+     * 
+     * @param str IN: StringBuilder de la chaine de charactères à décompresser 
+     * @return un StringBuilder de la chaine décompressée
+     */
+    private static StringBuilder unRLE(StringBuilder str){
+
+        // La fonction est identique à celle publique simplement sans conversion en String 
+        // Elle évite la perte de temps de la conversion StringBuilder -> String.
+
+        int len=str.length(),times;
+        StringBuilder sb=new StringBuilder(len);
+        char toAdd;
+
+        for(int i=0;i<len;i+=2){
+            times=str.charAt(i)-'0';
+            toAdd=str.charAt(i+1);
+            for(int j=0;j<times;j++)
+                sb.append(toAdd);
+        }
+
+        return sb;
     }
 }
+
