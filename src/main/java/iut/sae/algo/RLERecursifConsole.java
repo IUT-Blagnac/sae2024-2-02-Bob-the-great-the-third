@@ -29,6 +29,8 @@ public class RLERecursifConsole{
             System.out.println("Itérations : "+iterations);
             System.out.println("Sortie : "+ Efficacite.RLE(in, iterations));
             System.out.println("UnRLE : "+Efficacite.unRLE(Efficacite.RLE(in, iterations), iterations));
+
+            if(0==1) throw new AlgoException();
         }
         catch(AlgoException e){
             System.err.println("Erreur lors de la transformation");

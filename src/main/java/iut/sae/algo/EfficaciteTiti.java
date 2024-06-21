@@ -55,7 +55,7 @@ public class EfficaciteTiti{
     }
 
 
-    public static String RLE(String in, int iteration) throws AlgoException{
+    public static String RLE(String in, int iteration) {
         // Si la chaine est vide on retourne un String vide
         if(in.isEmpty())
             return "";
