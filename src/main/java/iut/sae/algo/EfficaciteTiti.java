@@ -1,7 +1,7 @@
 package iut.sae.algo;
 
 
-public class Efficacite{
+public class EfficaciteTiti{
 
 
     public static String RLE(String in){

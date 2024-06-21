@@ -1,9 +1,14 @@
 package iut.sae.algo;
 
+import java.util.Random;
+
 public class RLEBenchmark1 {
 
     public static void main(String[] args) {
-        String input = generateTestData(100000); // Génère une chaîne de test de 100 000 caractères
+
+        generateDataFile();
+
+        /*String input = generateTestData(100000); // Génère une chaîne de test de 100 000 caractères
 
         long startTime, endTime, duration1, duration2;
         int nbIte=(int)(Math.random() * (10) + 1);
@@ -23,78 +28,30 @@ public class RLEBenchmark1 {
         System.out.println("Algorithme 2 durée: " + duration2 + " ns");
 
         // Vérifier que les résultats sont identiques
-        System.out.println("Les résultats sont identiques: " + result1.equals(result2));
+        System.out.println("Les résultats sont identiques: " + result1.equals(result2));*/
     }
 
     private static String generateTestData(int length) {
         StringBuilder sb = new StringBuilder(length);
+        Random random=new Random();
         for (int i = 0; i < length; i++) {
-            sb.append((char) ('A' + (i % 26))); // Génère des caractères de A à Z
+            sb.append((char) ('A' + (random.nextInt() % 26))); // Génère des caractères de A à Z
         }
         return sb.toString();
     }
 
-    // Algorithme 1
-    public static String RLE1(String in, int iteration) {
-        String resultat=in;
+    private static void generateDataFile(){
+        String res="public class DataSet {\n   public static String[] data = { \"";
 
-        for(int i=0;i<iteration;i++){
-            resultat=RLE1Aide(resultat);
+
+        for(int i=0;i<100;i++){
+            res+="\n "+ generateTestData(10000)+",";
         }
-        return resultat;
-    }
+        res=res.substring(res.length()-2);
 
-    private static String RLE1Aide(String in) {
-        StringBuilder rle = new StringBuilder();
-        int compteur = 1;
-        int TailleIn=in.length();
-        for (int i = 0; i < TailleIn; i++) {
-            if (i+1 < TailleIn && in.charAt(i) == in.charAt(i+1) && compteur!=9) {
-                compteur++;
-            } else {
-                rle.append(compteur).append(in.charAt(i));
-                compteur = 1;
-            }
-        }
-        return rle.toString();
-    }
+        res+="\n } \n }";
 
-    // Algorithme 2
-    public static String RLE2(String in, int iteration) {
-        StringBuilder sb=new StringBuilder(in);
+        System.out.println(res);
 
-        for(int i=0;i<iteration;i++){
-            sb=RLE2Aide(sb);
-        }
-
-        return new String(sb);
-    }
-
-    private static StringBuilder RLE2Aide(StringBuilder in){
-        int len=in.length(), cpt=0;
-
-        StringBuilder str=new StringBuilder(len);
-		char lastChar=in.charAt(0),charAt;
-
-		for(int i=0;i<len;i++) {
-
-			charAt=in.charAt(i);
-
-			if(lastChar!=charAt || cpt>=9) {
-
-                str.append(cpt);
-                str.append(lastChar);
-
-                lastChar=charAt;
-                cpt=0;
-            }
-
-            cpt++;
-		}
-
-        str.append(cpt);
-        str.append(lastChar);
-        
-		return str;
     }
 }
